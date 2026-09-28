@@ -62,82 +62,106 @@ function displayTotalCriticalRate() {
 
 displayTotalCriticalRate();
 
-
 // ====================
 // スキルレベル変更
 // ====================
 
-// スキル要素をすべて取得
-const skillElements =
-  document.querySelectorAll(".skill");
+const skillList =
+  document.getElementById("skill-list");
 
-// スキルのレベルと会心率を画面に表示する関数
-function displaySkill(skillLevel, skillRate, targetSkill) {
-  skillLevel.textContent =
-    `Lv${targetSkill.level}`;
+  // スキルの数だけdivタグを繰り返し作る
+for (const skill of skills) {
+  const skillElement =
+    document.createElement("div");
 
-  skillRate.textContent =
-    `+${criticalRateByLevel[targetSkill.name][targetSkill.level]}%`;
+    // 上記で作ったdivタグにskillクラスを追加
+    skillElement.classList.add("skill");
 
-  // 合計会心率を表示
-  displayTotalCriticalRate();
-}
-
-// スキルを1つずつ処理
-for (const skillElement of skillElements) {
-
-  // スキル名を取得
+    // スキル名のspanタグ追加
   const skillName =
-    skillElement.querySelector(".skill-name");
+    document.createElement("span");
+    // スキル名追加
+    skillName.classList.add("skill-name");
 
-  // スキルレベルを表示する場所を取得
+    // スキル名表示
+    skillName.textContent =
+    skill.name;
+    skillElement.appendChild(skillName);
+
   const skillLevel =
-    skillElement.querySelector(".skill-level");
+    document.createElement("span");
 
-  // スキル会心率を表示する場所を取得
-  const skillRate =
-    skillElement.querySelector(".skill-rate");
+    // スキルレベル追加
+    skillLevel.classList.add("skill-level");
 
-  // レベルダウンボタン
+    skillLevel.textContent =
+      `Lv${skill.level}`;
+
+    skillElement.appendChild(skillLevel);
+
   const levelDownButton =
-    skillElement.querySelector(".level-down-button");
+    document.createElement("button");
+    levelDownButton.classList.add("level-down-button");
+    levelDownButton.textContent = "ー";
+    skillElement.appendChild(levelDownButton);
 
-  // レベルアップボタン
-  const levelUpButton =
-    skillElement.querySelector(".level-up-button");
+    levelDownButton.addEventListener("click", function () {
 
-  // JavaScript側のスキルデータを取得
-  const targetSkill =
-    skills.find(function (skill) {
-      return skill.name === skillName.textContent;
+      if (skill.level > 0) {
+        skill.level =
+          skill.level - 1;
+      }
+
+      skillLevel.textContent =
+        `Lv${skill.level}`;
+
+      skillRate.textContent =
+        `+${criticalRateByLevel[skill.name][skill.level]}%`;
+
+      displayTotalCriticalRate();
+
+      console.log(skill);
     });
 
-  // レベルダウン処理
-  levelDownButton.addEventListener("click", function () {
+  const levelUpButton =
+    document.createElement("button");
+    levelUpButton.classList.add("level-up-button");
+    levelUpButton.textContent = "＋";
+    skillElement.appendChild(levelUpButton);
 
-    // Lv0より大きければレベルを1下げる
-    if (targetSkill.level > 0) {
-      targetSkill.level = targetSkill.level - 1;
-    }
-
-    // 画面を更新
-    displaySkill(skillLevel, skillRate, targetSkill);
-  });
-
-  // レベルアップ処理
   levelUpButton.addEventListener("click", function () {
 
-    // スキルの最大レベルを取得
     const maxLevel =
-      criticalRateByLevel[targetSkill.name].length - 1;
+      criticalRateByLevel[skill.name].length - 1;
 
-    // 最大レベル未満ならレベルを1上げる
-    if (targetSkill.level < maxLevel) {
-      targetSkill.level = targetSkill.level + 1;
-    }
+      if (skill.level < maxLevel) {
+        skill.level =
+          skill.level + 1;
+      }
 
-    // 画面を更新
-    displaySkill(skillLevel, skillRate, targetSkill);
-  });
+      skillLevel.textContent =
+        `Lv${skill.level}`;
 
+      skillRate.textContent =
+        `+${criticalRateByLevel[skill.name][skill.level]}%`;
+
+      displayTotalCriticalRate();
+
+      console.log(skill);
+    });
+
+        // 会心率表示
+  const skillRate =
+    document.createElement("span");
+    skillRate.classList.add("skill-rate");
+
+    skillRate.textContent =
+      `+${criticalRateByLevel[skill.name][skill.level]}%`;
+
+    skillElement.appendChild(skillRate);
+
+
+    // 画面表示
+    skillList.appendChild(skillElement);
 }
+
