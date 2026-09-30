@@ -10,7 +10,14 @@
   <h1>MHWs 会心率計算ツール</h1>
 <section>
   <h2>武器</h2>
-  <p id="weapon-critical-rate">会心率：30%</p>
+  <input
+    type="number"
+    id="weapon-critical-rate"
+    value="0"
+    min="-20"
+    max="50"
+  >
+  <span>%</span>
 </section>
 
 <section>
@@ -19,8 +26,12 @@
 </section>
 
 <section>
+  <button id="reset-button">リセット</button>
+</section>
+
+<section>
   <h2>会心率</h2>
-  <p id="total-critical-rate">会心率：61%</p>
+  <p id="total-critical-rate">会心率：0%</p>
 </section>
 
 <script src="script.js"></script>
