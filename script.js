@@ -19,6 +19,7 @@ const skills = [
   { name: "濡れ刃紋", level: 0, category: "weapon" },
   { name: "抜刀術【技】", level: 0, category: "weapon" },
   { name: "フォースショット", level: 0, category: "weapon" },
+  { name: "連携プログラム", level: 0, category: "weapon" },
 
   // 防具スキル
   { name: "攻勢", level: 0, category: "armor" },
@@ -45,6 +46,7 @@ const criticalRateByLevel = { // スキルレベル毎の会心率
     water: [0, 3, 6, 9],
     bubble: [0, 7, 14, 21]
   },
+  "連携プログラム": [0, 15],
   "攻勢": [0, 0, 5, 10, 15, 20],
   "渾身": [0, 10, 20, 30],
   "挑戦者": [0, 3, 5, 7, 10, 15],
@@ -59,6 +61,7 @@ const criticalRateByLevel = { // スキルレベル毎の会心率
 let waterActive = false;
 let bubbleActive = false;
 let frenzyCured = false;
+let resonance2Active = false;
 
 
 // スキルの現在レベルから会心率を合計する
@@ -90,10 +93,28 @@ function calculateSkillRate() {
       criticalRateByLevel[skill.name].bubble[skill.level];
   }
 
-} else { 
-      skillRate =
-        criticalRateByLevel[skill.name][skill.level];
-    }
+} else if (skill.name == "連携プログラム") {
+
+  skillRate =
+    criticalRateByLevel[skill.name][skill.level];
+
+  if (resonance2Active && skill.level >= 1) {
+    skillRate = 25;
+  }
+
+} else if (skill.name == "連携プログラム") {
+
+  skillRate =
+    criticalRateByLevel[skill.name][skill.level];
+
+  if (resonance2Active && skill.level >= 1) {
+    skillRate = 25;
+  }
+
+} else {
+  skillRate =
+    criticalRateByLevel[skill.name][skill.level];
+}
     totalSkillRate += skillRate;
   }
 
@@ -409,6 +430,15 @@ for (const skill of skills) {
     currentSkillRate +=
       criticalRateByLevel[skill.name].bubble[skill.level];
   }
+} else if (skill.name == "連携プログラム") {
+
+  currentSkillRate =
+    criticalRateByLevel[skill.name][skill.level];
+
+  if (resonance2Active && skill.level >= 1) {
+    currentSkillRate = 25;
+  }
+
 } else {
   currentSkillRate =
     criticalRateByLevel[skill.name][skill.level];
@@ -548,6 +578,30 @@ for (const skill of skills) {
     updateSkillDisplay();
     displayTotalCriticalRate();
   });
+}
+
+if (skill.name == "連携プログラム") {
+
+  const resonance2Checkbox =
+    document.createElement("input");
+
+  resonance2Checkbox.type = "checkbox";
+  resonance2Checkbox.addEventListener("change", function () {
+  resonance2Active = resonance2Checkbox.checked;
+
+  console.log(resonance2Active);
+
+  updateSkillDisplay();
+  displayTotalCriticalRate();
+});
+
+  const resonance2Label =
+    document.createElement("label");
+
+  resonance2Label.textContent = "レゾナンスⅡ発動中";
+
+  skillElement.appendChild(resonance2Checkbox);
+  skillElement.appendChild(resonance2Label); 
 }
 
 
