@@ -45,4 +45,5 @@ https://takeshi474.github.io/mhwilds-critical-rate/
 ## 今後の改善予定
 
 - スキルや会心率データの管理方法の改善
-- 機能の拡張
+- 機能の拡張（Reactなど）
+- アセンダンス発売後の新スキルへの対応
