@@ -6,9 +6,6 @@
 const weaponCriticalRateInput =
   document.getElementById("weapon-critical-rate");
 
-console.log(weaponCriticalRateInput.value);
-
-
 // ====================
 // スキル会心率
 // ====================
@@ -16,9 +13,9 @@ console.log(weaponCriticalRateInput.value);
 const skills = [
   // 武器スキル
   { name: "見切り", level: 0, category: "weapon" },
-  { name: "濡れ刃紋", level: 0, category: "weapon" },
   { name: "抜刀術【技】", level: 0, category: "weapon" },
   { name: "フォースショット", level: 0, category: "weapon" },
+  { name: "濡れ刃紋", level: 0, category: "weapon" },
   { name: "連携プログラム", level: 0, category: "weapon" },
 
   // 防具スキル
@@ -36,7 +33,8 @@ const skills = [
   { name: "革細工の滑性", level: 0, category: "group" }
 ];
 
-const criticalRateByLevel = { // スキルレベル毎の会心率
+// スキルレベル毎の会心率
+const criticalRateByLevel = { 
   "見切り": [0, 4, 8, 12, 16, 20],
   "弱点特効": {
     normal: [0, 5, 10, 15, 20, 30],
@@ -58,6 +56,7 @@ const criticalRateByLevel = { // スキルレベル毎の会心率
   "海竜の渦雷": [0, 15]
 };
 
+// 戦闘中の状態
 let waterActive = false;
 let bubbleActive = false;
 let frenzyCured = false;
@@ -81,6 +80,7 @@ function calculateSkillRate() {
 
   skillRate = 0;
 
+  // 水濡れ・泡状態による会心率を加算
   if (waterActive) {
     skillRate =
       skillRate +
@@ -91,15 +91,6 @@ function calculateSkillRate() {
     skillRate =
       skillRate +
       criticalRateByLevel[skill.name].bubble[skill.level];
-  }
-
-} else if (skill.name == "連携プログラム") {
-
-  skillRate =
-    criticalRateByLevel[skill.name][skill.level];
-
-  if (resonance2Active && skill.level >= 1) {
-    skillRate = 25;
   }
 
 } else if (skill.name == "連携プログラム") {
@@ -141,15 +132,6 @@ function calculateWoundSkillRate() {
   
 }
 
-function calculateSlickedBladeSkillRate() {
-  const skill = skills.find(function (skill) {
-    return skill.name == "濡れ刃紋";
-  });
-
-  return criticalRateByLevel[skill.name].water.bubble[skill.level];
-  
-}
-
 
 // ====================
 // 合計会心率
@@ -167,13 +149,10 @@ function displayTotalCriticalRate() {
     Number(weaponCriticalRateInput.value);
   // スキル会心
   const totalSkillRate = calculateSkillRate();
-  // 状態による会心
+  // 状態による会心率
   const totalBattleStateRate = calculateBattleStateRate();
   // 傷口会心
     const woundSkillRate = calculateWoundSkillRate();
-
-    console.log(woundSkillRate);
-    // console.log(SlickedBladeRate);
 
   // 合計会心率を計算
   const totalCriticalRate =
@@ -188,15 +167,13 @@ function displayTotalCriticalRate() {
   const woundCriticalRate =
     totalCriticalRate + woundSkillRate;
 
-    console.log(woundCriticalRate);
-
   // 合計会心率を表示
   if (woundSkillRate > 0) {
     totalCriticalRateElement.textContent =
-      `会心率：${totalCriticalRate}% 傷口攻撃時：${woundCriticalRate}%`;
+      `合計会心率：${totalCriticalRate}% 傷口攻撃時：${woundCriticalRate}%`;
   } else {
     totalCriticalRateElement.textContent =
-      `会心率：${totalCriticalRate}%`;
+      `合計会心率：${totalCriticalRate}%`;
   }
 }
 
@@ -218,7 +195,7 @@ const skillList =
 const battleStateList =
   document.getElementById("battle-state-list");
 
-// 狂竜症
+// 狂竜症チェックボックス✅
 const frenzyCuredCheckbox =
   document.createElement("input");
 
@@ -257,9 +234,11 @@ const resetButton =
     skill.level = 0;
   }
 
+  // 戦闘中の状態をリセット
   waterActive = false;
   bubbleActive = false;
   frenzyCured = false;
+  resonance2Active = false;
   frenzyCuredLabel.textContent = "狂竜症克服";
 
   const checkboxes = document.querySelectorAll(
@@ -353,6 +332,15 @@ for (const skill of skills) {
 
   skillElement.classList.add("skill");
 
+    let skillOptions;
+
+  const skillMain =
+    document.createElement("div");
+
+  skillMain.classList.add("skill-main");
+
+  skillElement.appendChild(skillMain);
+
 
   // ====================
   // スキル名
@@ -366,7 +354,7 @@ for (const skill of skills) {
   skillName.textContent =
     skill.name;
 
-  skillElement.appendChild(skillName);
+  skillMain.appendChild(skillName);
 
 
   // ====================
@@ -381,7 +369,7 @@ for (const skill of skills) {
   skillLevel.textContent =
     `Lv${skill.level}`;
 
-  skillElement.appendChild(skillLevel);
+  skillMain.appendChild(skillLevel);
 
 
   // ====================
@@ -458,7 +446,7 @@ for (const skill of skills) {
   levelDownButton.classList.add("level-down-button");
   levelDownButton.textContent = "ー";
 
-  skillElement.appendChild(levelDownButton);
+  skillMain.appendChild(levelDownButton);
 
   // −ボタンが押されたときの処理
   levelDownButton.addEventListener("click", function () {
@@ -474,7 +462,6 @@ for (const skill of skills) {
     // 合計会心率を更新
     displayTotalCriticalRate();
 
-    console.log(skill);
   });
 
 
@@ -488,7 +475,7 @@ for (const skill of skills) {
   levelUpButton.classList.add("level-up-button");
   levelUpButton.textContent = "＋";
 
-  skillElement.appendChild(levelUpButton);
+  skillMain.appendChild(levelUpButton);
 
   // ＋ボタンが押されたときの処理
   levelUpButton.addEventListener("click", function () {
@@ -514,6 +501,7 @@ for (const skill of skills) {
       skill.level =
         skill.level + 1;
 
+        // 無我の境地Lv1以上で狂竜症克服を自動発動
       if (skill.name == "無我の境地" && skill.level >= 1) {
         frenzyCured = true;
         frenzyCuredCheckbox.checked = true;
@@ -526,19 +514,33 @@ for (const skill of skills) {
     // 合計会心率を更新
     displayTotalCriticalRate();
 
-    console.log(skill);
   });
 
 
-  // ====================
-  // スキル会心率
-  // ====================
+// ====================
+// スキル会心率
+// ====================
 
-  // スキル会心率をスキルUIに追加
-  skillElement.appendChild(skillRate);
+// スキル会心率をスキルUIに追加
+skillMain.appendChild(skillRate);
 
-     if (skill.name == "濡れ刃紋") {
 
+// ====================
+// 特殊要素
+// ====================
+
+if (skill.name == "濡れ刃紋") {
+
+  // 特殊要素を入れるdiv
+  skillOptions =
+    document.createElement("div");
+
+  skillOptions.classList.add("skill-options");
+
+  skillElement.appendChild(skillOptions);
+
+
+  // 水濡れ
   const waterCheckbox =
     document.createElement("input");
 
@@ -549,6 +551,19 @@ for (const skill of skills) {
 
   waterLabel.textContent = "水濡れ";
 
+
+  const waterOption =
+    document.createElement("div");
+
+  waterOption.classList.add("skill-option");
+
+  waterOption.appendChild(waterCheckbox);
+  waterOption.appendChild(waterLabel);
+
+  skillOptions.appendChild(waterOption);
+
+
+  // 泡状態
   const bubbleCheckbox =
     document.createElement("input");
 
@@ -559,57 +574,94 @@ for (const skill of skills) {
 
   bubbleLabel.textContent = "泡状態";
 
-  skillElement.appendChild(waterCheckbox);
-  skillElement.appendChild(waterLabel);
 
-  skillElement.appendChild(bubbleCheckbox);
-  skillElement.appendChild(bubbleLabel);
+  const bubbleOption =
+    document.createElement("div");
 
+  bubbleOption.classList.add("skill-option");
+
+  bubbleOption.appendChild(bubbleCheckbox);
+  bubbleOption.appendChild(bubbleLabel);
+
+  skillOptions.appendChild(bubbleOption);
+
+
+  // イベント処理
   waterCheckbox.addEventListener("change", function () {
     waterActive = waterCheckbox.checked;
-    console.log(waterActive);
+
     updateSkillDisplay();
     displayTotalCriticalRate();
   });
+
 
   bubbleCheckbox.addEventListener("change", function () {
     bubbleActive = bubbleCheckbox.checked;
-    console.log(bubbleActive);
+
     updateSkillDisplay();
     displayTotalCriticalRate();
   });
+
 }
+
+
+// ====================
+// 連携プログラム
+// ====================
 
 if (skill.name == "連携プログラム") {
 
+  // 特殊要素を入れるdiv
+  skillOptions =
+    document.createElement("div");
+
+  skillOptions.classList.add("skill-options");
+
+  skillElement.appendChild(skillOptions);
+
+
+  // レゾナンスⅡ
   const resonance2Checkbox =
     document.createElement("input");
 
   resonance2Checkbox.type = "checkbox";
-  resonance2Checkbox.addEventListener("change", function () {
-  resonance2Active = resonance2Checkbox.checked;
 
-  console.log(resonance2Active);
-
-  updateSkillDisplay();
-  displayTotalCriticalRate();
-});
 
   const resonance2Label =
     document.createElement("label");
 
-  resonance2Label.textContent = "レゾナンスⅡ発動中";
+  resonance2Label.textContent =
+    "レゾナンスⅡ発動中";
 
-  skillElement.appendChild(resonance2Checkbox);
-  skillElement.appendChild(resonance2Label); 
+
+  const resonance2Option =
+    document.createElement("div");
+
+  resonance2Option.classList.add("skill-option");
+
+  resonance2Option.appendChild(resonance2Checkbox);
+  resonance2Option.appendChild(resonance2Label);
+
+  skillOptions.appendChild(resonance2Option);
+
+
+  // イベント処理
+  resonance2Checkbox.addEventListener("change", function () {
+
+    resonance2Active =
+      resonance2Checkbox.checked;
+
+    updateSkillDisplay();
+    displayTotalCriticalRate();
+  });
+
 }
-
 
   // ====================
   // 画面に追加
   // ====================
 
-  // 完成したスキルUIをカテゴリーごとの入れ物に追加
+  // 完成したスキルUIをカテゴリーごとに追加
   if (skill.category === "weapon") {
     weaponSkillList.appendChild(skillElement);
   } else if (skill.category === "armor") {
