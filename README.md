@@ -30,6 +30,9 @@ https://takeshi474.github.io/mhwilds-critical-rate/
 - 設定を初期状態に戻すリセット機能
 - PC・タブレット・スマートフォンに対応したレスポンシブデザイン
 
+<img width="1437" height="807" alt="Image" src="https://github.com/user-attachments/assets/29fe8124-2a2a-46cf-a8dd-edf6ce98a660" />
+<img width="1440" height="817" alt="Image" src="https://github.com/user-attachments/assets/4b143736-82da-4e01-9fb1-88bb90b64eb9" />
+
 ## 工夫した点
 
 - スキルのレベルを数字ボタンから直接選択できるようにし、スマートフォンでも操作しやすいUIにしました。
