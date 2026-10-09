@@ -435,8 +435,6 @@ for (const skill of skills) {
   skillRate.textContent = `+${currentSkillRate}%`;
 }
 
-
-
   // ====================
   // レベル選択ボタン
   // ====================
@@ -496,16 +494,6 @@ for (const skill of skills) {
 
   // 数字ボタンをスキルカードに追加
   skillElement.appendChild(skillLevelButtons);
-
-
-
-// ====================
-// スキル会心率
-// ====================
-
-// スキル会心率をスキルUIに追加
-// skillMain.appendChild(skillRate);
-
 
 // ====================
 // 特殊要素
