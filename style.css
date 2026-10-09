@@ -202,6 +202,61 @@
     レベルボタン
     ==================== */
 
+
+/* ====================
+   スキルレベル選択ボタン
+   ==================== */
+
+.skill-level-buttons {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.skill-level-button {
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+
+  background-color: #ffffff;
+  color: #495057;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+/* 選択中のレベル */
+.skill-level-button.active {
+  color: #2c6e49;
+  background-color: #dff2e5;
+  border-color: #2c6e49;
+}
+
+/* マウス操作時 */
+.skill-level-button:hover {
+  border-color: #2c6e49;
+}
+
+/* スマートフォン */
+@media (max-width: 576px) {
+  .skill-level-buttons {
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+
+  .skill-level-button {
+    min-height: 40px;
+    font-size: 1rem;
+  }
+}
+
+
     .level-down-button,
     .level-up-button {
     flex-shrink: 0;

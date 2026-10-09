@@ -12,25 +12,25 @@ const weaponCriticalRateInput =
 
 const skills = [
   // 武器スキル
-  { name: "見切り", level: 0, category: "weapon" },
-  { name: "抜刀術【技】", level: 0, category: "weapon" },
-  { name: "フォースショット", level: 0, category: "weapon" },
-  { name: "濡れ刃紋", level: 0, category: "weapon" },
-  { name: "連携プログラム", level: 0, category: "weapon" },
+  { name: "見切り", level: 0, maxLevel: 5, category: "weapon" },
+  { name: "抜刀術【技】", level: 0, maxLevel: 3, category: "weapon" },
+  { name: "フォースショット", level: 0, maxLevel: 3, category: "weapon" },
+  { name: "濡れ刃紋", level: 0, maxLevel: 3, category: "weapon" },
+  { name: "連携プログラム", level: 0, maxLevel: 1, category: "weapon" },
 
   // 防具スキル
-  { name: "攻勢", level: 0, category: "armor" },
-  { name: "渾身", level: 0, category: "armor" },
-  { name: "弱点特効", level: 0, category: "armor" },
-  { name: "挑戦者", level: 0, category: "armor" },
-  { name: "力の解放", level: 0, category: "armor" },
-  { name: "無我の境地", level: 0, category: "armor" },
+  { name: "攻勢", level: 0, maxLevel: 5, category: "armor" },
+  { name: "渾身", level: 0, maxLevel: 3, category: "armor" },
+  { name: "弱点特効", level: 0, maxLevel: 5, category: "armor" },
+  { name: "挑戦者", level: 0, maxLevel: 5, category: "armor" },
+  { name: "力の解放", level: 0, maxLevel: 5, category: "armor" },
+  { name: "無我の境地", level: 0, maxLevel: 3, category: "armor" },
 
   // シリーズスキル
-  { name: "海竜の渦雷", level: 0, category: "series" },
+  { name: "海竜の渦雷", level: 0, maxLevel: 1, category: "series" },
 
   // グループスキル
-  { name: "革細工の滑性", level: 0, category: "group" }
+  { name: "革細工の滑性", level: 0, maxLevel: 1, category: "group" }
 ];
 
 // スキルレベル毎の会心率
@@ -436,85 +436,67 @@ for (const skill of skills) {
 }
 
 
+
   // ====================
-  // レベルダウンボタン
+  // レベル選択ボタン
   // ====================
 
-  const levelDownButton =
-    document.createElement("button");
+  // 会心率を上段に追加
+  skillMain.appendChild(skillRate);
 
-  levelDownButton.classList.add("level-down-button");
-  levelDownButton.textContent = "ー";
+  // 数字ボタンを入れるdiv
+  const skillLevelButtons =
+    document.createElement("div");
 
-  skillMain.appendChild(levelDownButton);
+  skillLevelButtons.classList.add("skill-level-buttons");
 
-  // −ボタンが押されたときの処理
-  levelDownButton.addEventListener("click", function () {
+  // Lv0から最大レベルまでボタンを生成
+  for (let level = 0; level <= skill.maxLevel; level++) {
+    const levelButton =
+      document.createElement("button");
 
-    // Lv0より大きければレベルを1下げる
-    if (skill.level > 0) {
-      skill.level =
-        skill.level - 1;
+    levelButton.type = "button";
+    levelButton.classList.add("skill-level-button");
+    levelButton.textContent = level;
+
+    // 現在のレベルを選択状態にする
+    if (skill.level === level) {
+      levelButton.classList.add("active");
     }
 
-    updateSkillDisplay();
+    // 数字ボタンが押されたときの処理
+    levelButton.addEventListener("click", function () {
+      skill.level = level;
 
-    // 合計会心率を更新
-    displayTotalCriticalRate();
-
-  });
-
-
-  // ====================
-  // レベルアップボタン
-  // ====================
-
-  const levelUpButton =
-    document.createElement("button");
-
-  levelUpButton.classList.add("level-up-button");
-  levelUpButton.textContent = "＋";
-
-  skillMain.appendChild(levelUpButton);
-
-  // ＋ボタンが押されたときの処理
-  levelUpButton.addEventListener("click", function () {
-
-    // スキルの最大レベルを取得
-    let maxLevel;
-
-    if (skill.name == "弱点特効") {
-      maxLevel =
-        criticalRateByLevel[skill.name].normal.length - 1;
-
-    } else if (skill.name == "濡れ刃紋") {
-      maxLevel =
-        criticalRateByLevel[skill.name].water.length - 1;
-
-    } else {
-      maxLevel =
-        criticalRateByLevel[skill.name].length - 1;
-    }
-
-    // 最大レベル未満ならレベルを1上げる
-    if (skill.level < maxLevel) {
-      skill.level =
-        skill.level + 1;
-
-        // 無我の境地Lv1以上で狂竜症克服を自動発動
-      if (skill.name == "無我の境地" && skill.level >= 1) {
+      // 無我の境地Lv1以上なら狂竜症克服を発動
+      if (skill.name === "無我の境地" && skill.level >= 1) {
         frenzyCured = true;
         frenzyCuredCheckbox.checked = true;
         frenzyCuredLabel.textContent = "狂竜症克服 +15%";
       }
-    }
 
-    updateSkillDisplay();
+      updateSkillDisplay();
 
-    // 合計会心率を更新
-    displayTotalCriticalRate();
+      // 選択中の数字の見た目を更新
+      const buttons =
+        skillLevelButtons.querySelectorAll("button");
 
-  });
+      buttons.forEach(function (button) {
+        button.classList.toggle(
+          "active",
+          Number(button.textContent) === skill.level
+        );
+      });
+
+      displayTotalCriticalRate();
+    });
+
+    skillLevelButtons.appendChild(levelButton);
+  }
+
+  // 数字ボタンをスキルカードに追加
+  skillElement.appendChild(skillLevelButtons);
+
 
 
 // ====================
@@ -522,7 +504,7 @@ for (const skill of skills) {
 // ====================
 
 // スキル会心率をスキルUIに追加
-skillMain.appendChild(skillRate);
+// skillMain.appendChild(skillRate);
 
 
 // ====================
