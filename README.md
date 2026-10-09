@@ -4,6 +4,8 @@
 
 『モンスターハンターワイルズ』の武器会心率やスキル、戦闘中の状態をもとに、合計会心率を計算するWebアプリケーションです。
 
+実際にゲームを遊んでいる際にスキルシミュレータをお借りしてスキルビルドをしますが、会心率はそこではわからず、いちいち計算するのも面倒だったため、自分で作りました。
+
 スキルのレベルや各種条件を変更しながら、会心率がどのように変化するかを確認できます。
 
 ## 公開URL
@@ -30,8 +32,8 @@ https://takeshi474.github.io/mhwilds-critical-rate/
 - 設定を初期状態に戻すリセット機能
 - PC・タブレット・スマートフォンに対応したレスポンシブデザイン
 
-<img width="1437" height="807" alt="Image" src="https://github.com/user-attachments/assets/29fe8124-2a2a-46cf-a8dd-edf6ce98a660" />
-<img width="1440" height="817" alt="Image" src="https://github.com/user-attachments/assets/4b143736-82da-4e01-9fb1-88bb90b64eb9" />
+<img width="1440" height="800" alt="Image" src="https://github.com/user-attachments/assets/29fe8124-2a2a-46cf-a8dd-edf6ce98a660" />
+<img width="1440" height="800" alt="Image" src="https://github.com/user-attachments/assets/4b143736-82da-4e01-9fb1-88bb90b64eb9" />
 
 ## 工夫した点
 
@@ -42,6 +44,5 @@ https://takeshi474.github.io/mhwilds-critical-rate/
 
 ## 今後の改善予定
 
-- UI・操作性の改善
 - スキルや会心率データの管理方法の改善
 - 機能の拡張
