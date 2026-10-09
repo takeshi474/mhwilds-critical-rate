@@ -256,12 +256,27 @@ const resetButton =
   const skillRates =
     document.querySelectorAll(".skill-rate");
 
-  for (let i = 0; i < skills.length; i++) {
-    skillLevels[i].textContent =
-      `Lv${skills[i].level}`;
 
+  for (let i = 0; i < skills.length; i++) {
+    // スキルレベル表示を0にする
+    skillLevels[i].textContent = `Lv${skills[i].level}`;
+
+    // スキル会心率を0にする
     skillRates[i].textContent = `+0%`;
+
+    // 数字ボタンの選択状態を更新
+    const buttons = document.querySelectorAll(
+      ".skill-level-buttons"
+    )[i].querySelectorAll("button");
+
+    buttons.forEach(function (button) {
+      button.classList.toggle(
+        "active",
+        Number(button.textContent) === 0
+      );
+    });
   }
+
 
   // 合計会心率を更新
   displayTotalCriticalRate();
