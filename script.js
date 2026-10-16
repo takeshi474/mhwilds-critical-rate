@@ -68,46 +68,45 @@ function calculateSkillRate() {
 
   let totalSkillRate = 0;
 
-  // skillsから1つずつskillを取り出して処理
-  for (const skill of skills) {
+    // skillsから1つずつskillを取り出して処理
+    for (const skill of skills) {
 
-    let skillRate;
+      let skillRate;
 
-    if (skill.name == "弱点特効") {
-      skillRate = 
-        criticalRateByLevel[skill.name].normal[skill.level]    
-    } else if (skill.name == "濡れ刃紋") {
+      if (skill.name == "弱点特効") {
+        skillRate = 
+          criticalRateByLevel[skill.name].normal[skill.level]    
+      } else if (skill.name == "濡れ刃紋") {
 
-  skillRate = 0;
+      skillRate = 0;
 
-  // 水濡れ・泡状態による会心率を加算
-  if (waterActive) {
-    skillRate =
-      skillRate +
-      criticalRateByLevel[skill.name].water[skill.level];
-  }
+        // 水濡れ・泡状態による会心率を加算
+        if (waterActive) {
+          skillRate =
+            skillRate +
+            criticalRateByLevel[skill.name].water[skill.level];
+        }
 
-  if (bubbleActive) {
-    skillRate =
-      skillRate +
-      criticalRateByLevel[skill.name].bubble[skill.level];
-  }
+        if (bubbleActive) {
+          skillRate =
+            skillRate +
+            criticalRateByLevel[skill.name].bubble[skill.level];
+        }
 
-} else if (skill.name == "連携プログラム") {
+      } else if (skill.name == "連携プログラム") {
 
-  skillRate =
-    criticalRateByLevel[skill.name][skill.level];
+        skillRate =
+          criticalRateByLevel[skill.name][skill.level];
 
-  if (resonance2Active && skill.level >= 1) {
-    skillRate = 25;
-  }
-
-} else {
-  skillRate =
-    criticalRateByLevel[skill.name][skill.level];
-}
-    totalSkillRate += skillRate;
-  }
+        if (resonance2Active && skill.level >= 1) {
+          skillRate = 25;
+        }
+      } else {
+        skillRate =
+          criticalRateByLevel[skill.name][skill.level];
+      }
+      totalSkillRate += skillRate;
+    }
 
   return totalSkillRate;
 }
@@ -123,6 +122,7 @@ function calculateBattleStateRate() {
   return totalBattleStateRate;
 }
 
+// 傷口への会心率
 function calculateWoundSkillRate() {
   const skill = skills.find(function (skill) {
     return skill.name == "弱点特効";
@@ -189,7 +189,7 @@ weaponCriticalRateInput.addEventListener("input", function () {
 // スキルUI生成
 // ====================
 
-// スキル、状態を表示するHTMLの入れ物を取得
+// スキル、状態を表示するHTMLを取得
 const skillList =
   document.getElementById("skill-list");
 const battleStateList =
